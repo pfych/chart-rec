@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import { keyBy, groupBy, get } from 'lodash';
 import { UncontrolledCollapse } from 'reactstrap';
-import { ChartDocument } from 'tachi-common';
+import { ChartDocument, SongDocument } from 'tachi-common';
 import { Context } from '../../api/Context';
 import styles from './chart-list.module.scss';
 
@@ -49,7 +49,7 @@ const ChartList = (): JSX.Element => {
       case 'ASSIST CLEAR':
         return '#9932cc66';
       case 'FAILED':
-        return 'AA555566';
+        return '#AA555566';
       default:
         return '#fff';
     }
@@ -78,9 +78,17 @@ const ChartList = (): JSX.Element => {
                   <li
                     key={chart.chartID}
                     style={{
-                      backgroundColor: getColourForLamp(pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,),
+                      backgroundColor: getColourForLamp(
+                        pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
+                      ),
                     }}
                   >
+                    <img
+                      src={`https://cdn.kamaitachi.xyz/game-icons/iidx/${
+                        songsKeyedById[chart.songID]?.data.displayVersion
+                      }`}
+                      alt={songsKeyedById[chart.songID]?.data.displayVersion}
+                    />
                     {songsKeyedById[chart.songID]?.title || 'Unknown song'} -{' '}
                     {pbsKeyedByChartId[chart.chartID]?.scoreData.lamp ||
                       'NO PLAY'}

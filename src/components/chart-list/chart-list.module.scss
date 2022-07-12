@@ -22,5 +22,17 @@
   ul {
     padding: unset;
     list-style: none;
+
+    li {
+      padding: 8px;
+      border-bottom: 1px solid #0a0a0a;
+
+      img {
+        height: 50px;
+        width: 100px;
+        margin-right: 8px;
+        object-fit: contain;
+      }
+    }
   }
 }
