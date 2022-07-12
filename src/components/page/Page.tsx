@@ -1,6 +1,4 @@
 import React from 'react';
-import Footer from '../footer/Footer';
-import Navbar from '../navbar/Navbar';
 import styles from './page.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -37,9 +35,7 @@ const Page = (props: Props): JSX.Element => {
         />
       </div>
       <script async src="https://kit.fontawesome.com/c6e566ba48.js" />
-      <Navbar />
       {children}
-      <Footer />
     </div>
   );
 };

@@ -21,6 +21,7 @@ module.exports = {
   plugins: ['react-hooks', '@typescript-eslint/eslint-plugin', 'prettier'],
   rules: {
     camelcase: 'error',
+    '@typescript-eslint/no-unused-vars': 'off',
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     '@typescript-eslint/return-await': 'off',
