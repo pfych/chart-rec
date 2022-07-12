@@ -89,9 +89,7 @@ const ChartList = (): JSX.Element => {
                       }`}
                       alt={songsKeyedById[chart.songID]?.data.displayVersion}
                     />
-                    {songsKeyedById[chart.songID]?.title || 'Unknown song'} -{' '}
-                    {pbsKeyedByChartId[chart.chartID]?.scoreData.lamp ||
-                      'NO PLAY'}
+                    {songsKeyedById[chart.songID]?.title || 'Unknown song'}
                   </li>
                 ))}
               </ul>
