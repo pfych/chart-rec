@@ -1,5 +1,5 @@
 {
-  "name": "baseline-webpage",
+  "name": "chart-rec",
   "private": true,
   "engines": {
     "node": "14"
@@ -7,12 +7,12 @@
   "scripts": {
     "build": "NODE_OPTIONS=--max_old_space_size=8192 GENERATE_SOURCEMAP=false react-scripts build",
     "start": "react-scripts start",
-    "deploy:dev": "yarn build && export AWS_PROFILE=baseline-webpage && yarn serverless deploy --stage dev --region ap-southeast-2 --param=\"profile=baseline-webpage\"",
-    "remove:dev": "export AWS_PROFILE=baseline-webpage && yarn serverless remove --stage dev --region ap-southeast-2 --param=\"profile=baseline-webpage\"",
-    "deploy:prod": "yarn build && export AWS_PROFILE=baseline-webpage && yarn serverless deploy --stage prod --region ap-southeast-2 --param=\"profile=baseline-webpage\"",
-    "remove:prod": "export AWS_PROFILE=baseline-webpage && yarn serverless remove --stage prod --region ap-southeast-2 --param=\"profile=baseline-webpage\"",
+    "deploy:dev": "yarn build && export AWS_PROFILE=chart-rec && yarn serverless deploy --stage dev --region ap-southeast-2 --param=\"profile=chart-rec\"",
+    "remove:dev": "export AWS_PROFILE=chart-rec && yarn serverless remove --stage dev --region ap-southeast-2 --param=\"profile=chart-rec\"",
+    "deploy:prod": "yarn build && export AWS_PROFILE=chart-rec && yarn serverless deploy --stage prod --region ap-southeast-2 --param=\"profile=chart-rec\"",
+    "remove:prod": "export AWS_PROFILE=chart-rec && yarn serverless remove --stage prod --region ap-southeast-2 --param=\"profile=chart-rec\"",
     "rename": "./scripts/rename.sh",
-    "aws:profile": "./scripts/setup-aws-profile.sh baseline-webpage"
+    "aws:profile": "./scripts/setup-aws-profile.sh chart-rec"
   },
   "dependencies": {
     "@types/react-slick": "0.23.8",
