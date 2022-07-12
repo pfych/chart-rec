@@ -1,5 +1,5 @@
 import React from 'react';
-import Countdown from '../components/countdowns/countdown/Countdown';
+import Countdown from '../components/countdown/Countdown';
 import Page from '../components/page/Page';
 
 interface Props {
@@ -36,7 +36,7 @@ const Error = (props: Props): JSX.Element => {
           heading=""
           subHeading="Something has gone wrong"
           content={getErrorText()}
-          image=""
+          image="./baseline-logo.svg"
         />
       </div>
     </Page>

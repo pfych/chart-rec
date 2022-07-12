@@ -1,6 +1,6 @@
-@use '../../../styles/colors';
-@use '../../../styles/layout';
-@use '../../../styles/mixins';
+@use '../../styles/colors';
+@use '../../styles/layout';
+@use '../../styles/mixins';
 
 .countdown {
   background-color: colors.$greyLight2;

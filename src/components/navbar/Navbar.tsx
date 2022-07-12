@@ -3,18 +3,6 @@ import { Collapse } from 'reactstrap';
 import styles from './navbar.module.scss';
 
 const links = [
-  {
-    href: '/about',
-    label: 'About',
-  },
-  {
-    href: '/collaborations',
-    label: 'Collaborations',
-  },
-  {
-    href: '/contact',
-    label: 'Contact Us',
-  },
 ];
 
 const Navbar = (): JSX.Element => {

@@ -2,7 +2,7 @@
   "name": "chart-rec",
   "private": true,
   "engines": {
-    "node": "14"
+    "node": ">14"
   },
   "scripts": {
     "build": "NODE_OPTIONS=--max_old_space_size=8192 GENERATE_SOURCEMAP=false react-scripts build",
@@ -15,22 +15,18 @@
     "aws:profile": "./scripts/setup-aws-profile.sh chart-rec"
   },
   "dependencies": {
-    "@types/react-slick": "0.23.8",
     "bootstrap": "5.1.3",
-    "formik": "2.2.9",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "4.3.1",
     "react-router-dom": "6.2.1",
     "react-scripts": "5.0.0",
-    "react-slick": "0.28.1",
     "reactstrap": "9.0.1"
   },
   "devDependencies": {
     "@types/node": "17.0.18",
     "@types/react": "17.0.36",
     "@types/react-dom": "17.0.11",
-    "@types/tryghost__content-api": "1.3.10",
     "@typescript-eslint/eslint-plugin": "4.26.1",
     "@typescript-eslint/parser": "4.26.1",
     "eslint": "7.32.0",
