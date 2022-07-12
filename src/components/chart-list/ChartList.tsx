@@ -5,19 +5,19 @@ import { ChartDocument } from 'tachi-common';
 import { Context } from '../../api/Context';
 import styles from './chart-list.module.scss';
 
-const Tiers = [
-  '11S+',
-  '11S',
-  '11A+',
-  '11A',
-  '11B',
-  '11C',
-  '11D',
-  '11E',
+export const Tiers = [
   '11F',
+  '11E',
+  '11D',
+  '11C',
+  '11B',
+  '11A',
+  '11A+',
+  '11S',
+  '11S+',
   'No Tier',
 ] as const;
-type TiersType = typeof Tiers[number];
+export type TiersType = typeof Tiers[number];
 
 const ChartList = (): JSX.Element => {
   const { pbs, charts, songs } = useContext(Context);
@@ -78,9 +78,7 @@ const ChartList = (): JSX.Element => {
                   <li
                     key={chart.chartID}
                     style={{
-                      backgroundColor: getColourForLamp(
-                        pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
-                      ),
+                      backgroundColor: getColourForLamp(pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,),
                     }}
                   >
                     {songsKeyedById[chart.songID]?.title || 'Unknown song'} -{' '}

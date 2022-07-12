@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ChartDocument, PBScoreDocument, SongDocument } from 'tachi-common';
 import { Context } from '../api/Context';
 import ChartList from '../components/chart-list/ChartList';
+import ChartRecommend from '../components/chart-recomend/ChartRecommend';
 import Page from '../components/page/Page';
 import Token from '../components/token/Token';
 
@@ -17,7 +18,9 @@ const Home = (): JSX.Element => {
   const [token, setToken] = useState('');
   const [pbs, setPbs] = useState<PBScoreDocument[] | undefined>(undefined);
   const [charts, setCharts] = useState<ChartDocument[] | undefined>(undefined);
-  const [songs, setSongs] = useState<SongDocument[] | undefined>(undefined);
+  const [songs, setSongs] = useState<SongDocument<'iidx'>[] | undefined>(
+    undefined,
+  );
 
   const pbsUrl = `${baseUrl}/users/${userId}/games/${game}/${playType}/folders/${folderId}`;
   const chartsUrl = `${baseUrl}/games/${game}/${playType}/folders/${folderId}`;
@@ -60,6 +63,7 @@ const Home = (): JSX.Element => {
           setSongs,
         }}
       >
+        {charts && songs && pbs && <ChartRecommend />}
         <ChartList />
         <Token />
       </Context.Provider>

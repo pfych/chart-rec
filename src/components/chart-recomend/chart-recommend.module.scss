@@ -1,0 +1,45 @@
+.chartRecommend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  min-height: 100vh;
+  margin: auto;
+
+  button {
+    margin: 16px;
+    padding: 16px;
+    background: unset;
+    border: 1px solid #0a0a0a;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .songData {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 200px;
+      margin: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+  }
+
+  .diff {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    max-width: 400px;
+
+    > button {
+      flex: 1 1 50%;
+    }
+  }
+}

@@ -10,8 +10,8 @@ export interface ContextType {
   setPbs(pbs: PBScoreDocument[]): void;
   charts?: ChartDocument[];
   setCharts(charts: ChartDocument[]): void;
-  songs?: SongDocument[];
-  setSongs(songs: SongDocument[]): void;
+  songs?: SongDocument<'iidx'>[];
+  setSongs(songs: SongDocument<'iidx'>[]): void;
 }
 
 export const Context = React.createContext<ContextType | null>(null);
