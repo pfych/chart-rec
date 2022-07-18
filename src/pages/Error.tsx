@@ -1,5 +1,6 @@
 import React from 'react';
 import Countdown from '../components/countdown/Countdown';
+import { Link } from 'react-router-dom';
 import Page from '../components/page/Page';
 
 interface Props {
@@ -17,7 +18,7 @@ const Error = (props: Props): JSX.Element => {
             This page does not exist...
             <br />
             <br />
-            <a href="/">Return Home</a>
+            <Link to="/">Return Home</Link>
           </p>
         );
       case 418:

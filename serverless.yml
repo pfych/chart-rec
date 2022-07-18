@@ -62,6 +62,7 @@ resources:
       Type: AWS::CloudFront::Distribution
       Properties:
         DistributionConfig:
+          HttpVersion: http2
           Origins:
             - DomainName: ${self:custom.s3Bucket}.s3.${opt:region}.amazonaws.com
               ## An identifier for the origin which must be unique within the distribution
@@ -103,6 +104,7 @@ resources:
                 Forward: none
             ## The protocol that users can use to access the files in the origin. To allow HTTP use `allow-all`
             ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           ## The certificate to use when viewers use HTTPS to request objects.
           ViewerCertificate:
             CloudFrontDefaultCertificate: true
@@ -118,7 +120,8 @@ resources:
 
   ## In order to print out the hosted domain via `serverless info` we need to define the DomainName output for CloudFormation
   Outputs:
-    WebsiteCloudFrontDistributionOutput:
+    WebsiteCloudFrontDistribution:
+      Description: Cloudfront site URL
       Value:
         "Fn::GetAtt": [WebsiteCloudFrontDistribution, DomainName]
     CDNDistributionId:
