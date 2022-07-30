@@ -47,3 +47,6 @@ yarn-error.log*
 
 # Setup specific
 .gitconfig
+
+node_modules/
+api/node_modules/

@@ -1,4 +1,4 @@
-service: baseline-webpage
+service: baseline-frontend
 
 # Options
 # - region
@@ -25,9 +25,12 @@ custom:
 provider:
   name: aws
   runtime: nodejs14.x
-  profile: ${param:profile} # force the profile parameter to be required
+  profile: ${param:profile}
   region: ${opt:region}
   stage: ${opt:stage}
+  environment:
+    COGNITO_CLIENT_ID: "7vsffeornn2a2h5fsemsfp5efa"
+    COGNITO_USER_POOL_ID: "ap-southeast-2_oLSeWN6PB"
 
 resources:
   Description: ${param:profile} ${opt:stage}
