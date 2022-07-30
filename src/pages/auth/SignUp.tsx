@@ -1,5 +1,4 @@
-import { ISignUpResult } from 'amazon-cognito-identity-js';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
 import Page from '../../components/page/Page';
@@ -12,16 +11,22 @@ const SignUp = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [waitingForVerification, setWaitingForVerification] = useState(false);
 
-  const [user, setUser] = useState<ISignUpResult>();
+  useEffect(() => {
+    (async () => {
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
+      if (currentAuthenticatedUser) {
+        navigate('/user');
+      }
+    })();
+  }, []);
 
   const handleSubmit = async () => {
     try {
-      const newUser = await Auth.signUp({
+      await Auth.signUp({
         username: email,
         password: password,
       });
 
-      setUser(newUser);
       setWaitingForVerification(true);
     } catch (e) {
       console.warn(e);
@@ -32,8 +37,7 @@ const SignUp = () => {
     try {
       await Auth.confirmSignUp(email, verificationCode);
       await Auth.signIn(email, password);
-      console.log('Success', user);
-      navigate('/');
+      navigate('/sign-in');
     } catch (e) {
       console.warn(e);
     }

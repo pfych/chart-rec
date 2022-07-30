@@ -76,13 +76,16 @@ resources:
       Value:
         Ref: CognitoUserPoolClient
 
+
 functions:
-  api:
+  app:
     handler: src/handler.handler
     events:
       - http:
-          path: /api/{any+}
           method: ANY
+          path: /{proxy+}
+          cors: true
           authorizer:
             type: COGNITO_USER_POOLS
-            authorizerId: "j681zo" # Figure out why I have to hard code this
+            authorizerId:
+              Ref: ApiGatewayAuthorizer

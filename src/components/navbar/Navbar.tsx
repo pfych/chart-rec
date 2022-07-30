@@ -5,8 +5,20 @@ import styles from './navbar.module.scss';
 
 const links = [
   {
+    href: '/sign-in',
+    label: 'Sign in',
+  },
+  {
+    href: '/sign-up',
+    label: 'Sign up',
+  },
+  {
+    href: '/user',
+    label: 'User',
+  },
+  {
     href: '/',
-    label: 'CTA',
+    label: 'Home',
   },
 ];
 

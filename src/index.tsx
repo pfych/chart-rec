@@ -6,15 +6,16 @@ import SignIn from './pages/auth/SignIn';
 import SignUp from './pages/auth/SignUp';
 import Home from './pages/Home';
 import Error from './pages/Error';
+import User from './pages/user/User';
 
 Amplify.configure({
   Auth: {
     userPoolId: `${
-      process.env.COGNITO_USER_POOL_ID || 'ap-southeast-2_oLSeWN6PB'
+      process.env.COGNITO_USER_POOL_ID || 'ap-southeast-2_xleq72qni'
     }`,
     region: 'ap-southeast-2',
     userPoolWebClientId: `${
-      process.env.COGNITO_CLIENT_ID || '7vsffeornn2a2h5fsemsfp5efa'
+      process.env.COGNITO_CLIENT_ID || '2sseruav7jkb5caaflcutj34lh'
     }`,
   },
 });
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/" element={<Home />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/user" element={<User />} />
 
         <Route path="*" element={<Error errorCode={404} />} />
       </Routes>
