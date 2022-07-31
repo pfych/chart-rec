@@ -63,7 +63,18 @@ const Home = (): JSX.Element => {
           setSongs,
         }}
       >
-        {charts && songs && pbs && <ChartRecommend />}
+        {charts && songs && pbs ? (
+          <ChartRecommend />
+        ) : (
+          <p>
+            Right now, until Kamaitachi enables CORS this site will not work on
+            most browsers. Please disable CORS as a temp work around!
+            <br />
+            Kamaitachi is aware of this issue and a fix is in the pipeline.
+            <br />
+            (This error also appears if the API fetch is taking a bit!)
+          </p>
+        )}
         <ChartList />
         <Token />
       </Context.Provider>
