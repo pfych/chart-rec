@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/button-with-loader/Button';
+import Loading from '../../components/loading/Loading';
 import Page from '../../components/page/Page';
 import styles from './user.module.scss';
 
@@ -41,20 +42,24 @@ const User = (): JSX.Element => {
 
   return (
     <Page title={'Account'}>
-      <div className={styles.user}>
-        <h1>Hi {user.attributes.email}</h1>
-        <p>id: {user.attributes.sub}</p>
-        <Button onClick={sendRequest}>Test API</Button>
-        <Button
-          onClick={async () => {
-            await Auth.signOut();
-            navigate('/');
-          }}
-        >
-          Sign Out
-        </Button>
-        <p>Response Data: {JSON.stringify(response)}</p>
-      </div>
+      {user ? (
+        <div className={styles.user}>
+          <h1>Hi {user.attributes.email}</h1>
+          <p>id: {user.attributes.sub}</p>
+          <Button onClick={sendRequest}>Test API</Button>
+          <Button
+            onClick={async () => {
+              await Auth.signOut();
+              navigate('/');
+            }}
+          >
+            Sign Out
+          </Button>
+          <p>Response Data: {JSON.stringify(response)}</p>
+        </div>
+      ) : (
+        <Loading />
+      )}
     </Page>
   );
 };
