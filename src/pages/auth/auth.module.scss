@@ -1,0 +1,40 @@
+@use '../../styles/layout';
+
+.container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .card {
+    padding: 16px;
+    margin: 16px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 2px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 400px;
+
+    input {
+      width: 100%;
+      margin-bottom: 1em;
+      padding: 6px 4px;
+      border: 1px solid #aaa
+    }
+
+
+
+    .infoText,
+    .errorText {
+      font: normal normal 300 12px/20px 'Roboto', sans-serif;
+
+      @media screen and (max-width: layout.$sm) {
+        font: normal normal 300 10px/18px 'Roboto', sans-serif;
+      }
+    }
+
+    .errorText {
+      font-weight: 400;
+      color: #f44
+    }
+  }
+}

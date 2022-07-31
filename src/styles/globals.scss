@@ -8,6 +8,11 @@ body {
   color: colors.$black;
   font-family: 'Roboto', sans-serif;
   background-color: colors.$white;
+  height: 100%;
+}
+
+:global(#root) {
+  height: 100%;
 }
 
 a {
@@ -46,6 +51,15 @@ p {
 
   @media screen and (max-width: layout.$sm) {
     margin-bottom: 23px;
+    font: normal normal 400 20px/28px 'Roboto', sans-serif;
+  }
+}
+
+input,
+button {
+  font: normal normal 400 22px/30px 'Roboto', sans-serif;
+
+  @media screen and (max-width: layout.$sm) {
     font: normal normal 400 20px/28px 'Roboto', sans-serif;
   }
 }

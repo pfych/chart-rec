@@ -1,0 +1,23 @@
+@keyframes rotation {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg) }
+}
+
+.button {
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 6px 4px;
+  border: 1px solid #aaa;
+  background: #fff;
+
+  .spinner {
+    width: 10px;
+    height: 100%;
+    border: 5px solid #aaa;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+}
