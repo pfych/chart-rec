@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Amplify from 'aws-amplify';
+import AuthRouter from './pages/auth/AuthRouter';
 import SignIn from './pages/auth/SignIn';
 import SignUp from './pages/auth/SignUp';
 import Home from './pages/Home';
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/user" element={<User />} />
+        <Route path="/auth" element={<AuthRouter />} />
 
         <Route path="*" element={<Error errorCode={404} />} />
       </Routes>
