@@ -2,7 +2,9 @@ import { Auth } from 'aws-amplify';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Button from '../../components/button-with-loader/Button';
 import Page from '../../components/page/Page';
+import styles from './user.module.scss';
 
 const User = (): JSX.Element => {
   const navigate = useNavigate();
@@ -11,10 +13,14 @@ const User = (): JSX.Element => {
 
   useEffect(() => {
     (async () => {
-      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
-      if (currentAuthenticatedUser) {
-        setUser(currentAuthenticatedUser);
-        console.log(currentAuthenticatedUser);
+      try {
+        const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
+        if (currentAuthenticatedUser) {
+          setUser(currentAuthenticatedUser);
+          console.log(currentAuthenticatedUser);
+        }
+      } catch (e) {
+        navigate('/sign-in');
       }
     })();
   }, []);
@@ -35,30 +41,20 @@ const User = (): JSX.Element => {
 
   return (
     <Page title={'Account'}>
-      {user ? (
-        <div>
-          <h1>Hi {user.attributes.sub}</h1>
-          <p>
-            Clicking or navigating to sign-in or sign-up while authed will
-            navigate you here, The navbar does not account for Auth state yet
-          </p>
-          <p>email: {user.attributes.email}</p>
-          <button onClick={sendRequest}>Test API</button>
-          <button
-            onClick={async () => {
-              await Auth.signOut();
-              navigate('/');
-            }}
-          >
-            Sign Out
-          </button>
-          <p>Response Data: {JSON.stringify(response)}</p>
-        </div>
-      ) : (
-        <div>
-          Please <Link to={'/sign-in'}>Sign in</Link>
-        </div>
-      )}
+      <div className={styles.user}>
+        <h1>Hi {user.attributes.email}</h1>
+        <p>id: {user.attributes.sub}</p>
+        <Button onClick={sendRequest}>Test API</Button>
+        <Button
+          onClick={async () => {
+            await Auth.signOut();
+            navigate('/');
+          }}
+        >
+          Sign Out
+        </Button>
+        <p>Response Data: {JSON.stringify(response)}</p>
+      </div>
     </Page>
   );
 };
