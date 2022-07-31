@@ -1,0 +1,91 @@
+service: chart-rec
+
+frameworkVersion: ">=2.0.0 <4.0.0"
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+custom:
+  apiCorsOrigin: "*" # todo: make more specific
+  esbuild:
+    bundle: true
+    minify: true
+    packager: yarn
+    watch:
+      pattern: ['src/**/*.ts']
+      ignore: ['node_modules/**/*', '.build/**/*', '.serverless/**/*', '.esbuild/**/*']
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  profile: ${param:profile} # force the profile parameter to be required
+  region: ${opt:region}
+  stage: ${opt:stage}
+  architecture: arm64
+  memorySize: 4096
+  environment:
+    COGNITO_CLIENT_ID:
+      Ref: CognitoUserPoolClient
+    COGNITO_USER_POOL_ID:
+      Ref: CognitoUserPool
+
+resources:
+  Resources:
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${param:profile}-${opt:stage}-user-pool
+        UsernameConfiguration:
+          CaseSensitive: false
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+        Policies:
+          PasswordPolicy:
+            MinimumLength: 6
+            RequireLowercase: True
+            RequireNumbers: True
+            RequireSymbols: True
+            RequireUppercase: True
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${param:profile}-${opt:stage}-user-pool-client
+        GenerateSecret: False
+        UserPoolId:
+          Ref: CognitoUserPool
+    ApiGatewayAuthorizer:
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        Name: ${param:profile}-${opt:stage}-cognito-authorizer
+        Type: COGNITO_USER_POOLS
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        ProviderARNs:
+          - Fn::GetAtt: [ CognitoUserPool, Arn ]
+  Outputs:
+    UserPoolId:
+      Description: 'User Pool'
+      Value:
+        Ref: CognitoUserPool
+    UserPoolClientId:
+      Description: 'User Pool client'
+      Value:
+        Ref: CognitoUserPoolClient
+
+
+functions:
+  app:
+    handler: src/handler.handler
+    events:
+      - http:
+          method: ANY
+          path: /{proxy+}
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
