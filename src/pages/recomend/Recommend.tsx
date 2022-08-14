@@ -266,7 +266,7 @@ const Recommend = (): JSX.Element => {
             </p>
           ) : (
             <div>
-              {!weightedCharts ? (
+              {weightedCharts.length <= 0 ? (
                 <Loading />
               ) : (
                 <ul>
