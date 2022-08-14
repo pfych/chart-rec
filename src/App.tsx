@@ -8,12 +8,13 @@ import SignUp from './pages/auth/SignUp';
 import Error from './pages/Error';
 import Home from './pages/Home';
 import TachiCallback from './pages/oAuth/TachiCallback';
+import Recommend from './pages/recomend/Recommend';
 import User from './pages/user/User';
 
 const App = (): JSX.Element => {
-  const [accessToken, setAccessToken] = useState<string>(undefined);
-  const [idToken, setIdToken] = useState<string>(undefined);
-  const [user, setUser] = useState<ExtendedCognitoUser>(undefined);
+  const [accessToken, setAccessToken] = useState<string>(null);
+  const [idToken, setIdToken] = useState<string>(null);
+  const [user, setUser] = useState<ExtendedCognitoUser>(null);
 
   useEffect(() => {
     (async () => {
@@ -45,6 +46,7 @@ const App = (): JSX.Element => {
           <Route path="/user" element={<User />} />
           <Route path="/auth" element={<AuthRouter />} />
           <Route path="/tachi-callback" element={<TachiCallback />} />
+          <Route path="/recommend" element={<Recommend />} />
 
           <Route path="*" element={<Error errorCode={404} />} />
         </Routes>

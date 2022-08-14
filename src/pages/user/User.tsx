@@ -50,17 +50,8 @@ const User = (): JSX.Element => {
               )}
             </span>
           )}
-          <Button
-            onClick={() =>
-              request({
-                endpoint: '/get-scores',
-                method: 'POST',
-                accessToken,
-                idToken,
-              })
-            }
-          >
-            Test API
+          <Button onClick={() => navigate('/recommend')}>
+            View Recommendations
           </Button>
           <Button
             onClick={async () => {
