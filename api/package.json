@@ -1,13 +1,13 @@
 {
-  "name": "baseline-api",
+  "name": "chart-rec-api",
   "private": true,
   "engines": {
     "node": ">=14.0.0"
   },
   "license": "MIT",
   "scripts": {
-    "start": "export AWS_PROFILE=baseline-api && serverless offline start --stage local --region ap-southeast-2  --param \"profile=baseline-api\"",
-    "deploy:dev": "export AWS_PROFILE=baseline-api && yarn serverless deploy --verbose --stage dev --region ap-southeast-2 --param \"profile=baseline-api\""
+    "start": "export AWS_PROFILE=baseline-api && serverless offline start --stage local --region ap-southeast-2  --param \"profile=chart-rec\"",
+    "deploy:dev": "export AWS_PROFILE=baseline-api && yarn serverless deploy --verbose --stage dev --region ap-southeast-2 --param \"profile=chart-rec\""
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.93",
@@ -25,9 +25,9 @@
     "prettier": "^2.7.1",
     "serverless": "3.12.0",
     "serverless-esbuild": "1.32.4",
+    "serverless-express": "2.0.12",
     "serverless-http": "^3.0.1",
     "serverless-offline": "9.0.0",
-    "serverless-express": "2.0.12",
     "uuid": "8.3.2"
   }
 }

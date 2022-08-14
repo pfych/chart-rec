@@ -50,3 +50,4 @@ yarn-error.log*
 
 node_modules/
 api/node_modules/
+/api/.esbuild/

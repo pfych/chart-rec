@@ -1,4 +1,5 @@
 import React from 'react';
+import Navbar from '../navbar/Navbar';
 import styles from './page.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -10,6 +11,7 @@ interface Props {
 
 const Page = (props: Props): JSX.Element => {
   const { title, description = title, children } = props;
+
   return (
     <div className={styles.page}>
       <div>
@@ -35,6 +37,7 @@ const Page = (props: Props): JSX.Element => {
         />
       </div>
       <script async src="https://kit.fontawesome.com/c6e566ba48.js" />
+      <Navbar />
       {children}
     </div>
   );

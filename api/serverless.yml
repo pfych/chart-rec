@@ -1,4 +1,4 @@
-service: chart-rec
+service: chart-rec-api
 
 frameworkVersion: ">=2.0.0 <4.0.0"
 
@@ -24,6 +24,17 @@ provider:
   stage: ${opt:stage}
   architecture: arm64
   memorySize: 4096
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        Fn::GetAtt: ["OAuthTable", "Arn"]
   environment:
     COGNITO_CLIENT_ID:
       Ref: CognitoUserPoolClient
@@ -66,6 +77,19 @@ resources:
           Ref: ApiGatewayRestApi
         ProviderARNs:
           - Fn::GetAtt: [ CognitoUserPool, Arn ]
+    OAuthTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${param:profile}-${opt:stage}-OAuth
+        AttributeDefinitions:
+          - AttributeName: cognitoSub
+            AttributeType: S
+        KeySchema:
+          - AttributeName: cognitoSub
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
   Outputs:
     UserPoolId:
       Description: 'User Pool'
