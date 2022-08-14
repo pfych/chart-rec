@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import { get, put } from '../db/db';
 import { OAUTH_TABLE } from '../db/tables';
+import { whoAmI } from '../tachi/utils';
 import { getUser } from '../utils/getUser';
 
 export const tachiOAuth = async (req: Request, res: Response) => {
@@ -58,6 +59,7 @@ export const oAuthStatus = async (req: Request, res: Response) => {
 
     res.end(JSON.stringify(responseBody));
   } catch (e) {
+    console.error(e);
     res.end(JSON.stringify(e));
   }
 };

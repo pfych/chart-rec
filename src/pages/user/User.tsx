@@ -50,7 +50,18 @@ const User = (): JSX.Element => {
               )}
             </span>
           )}
-          {/*<Button onClick={sendRequest}>Test API</Button>*/}
+          <Button
+            onClick={() =>
+              request({
+                endpoint: '/get-scores',
+                method: 'POST',
+                accessToken,
+                idToken,
+              })
+            }
+          >
+            Test API
+          </Button>
           <Button
             onClick={async () => {
               await Auth.signOut();

@@ -6,6 +6,7 @@ import cors from 'cors';
 import { get, put } from './db/db';
 import { OAUTH_TABLE } from './db/tables';
 import { oAuthStatus, tachiOAuth } from './oAuth/tachi-oauth';
+import { getScoresForUser } from './tachi/getScoresForUser';
 
 AWS.config.update({ region: 'ap-southeast-2' });
 const provider = new AWS.CognitoIdentityServiceProvider();
@@ -29,3 +30,4 @@ module.exports.handler = serverless(app, {
 
 app.post('/tachi-oauth', tachiOAuth);
 app.post('/oauth-status', oAuthStatus);
+app.post('/get-scores', getScoresForUser);
