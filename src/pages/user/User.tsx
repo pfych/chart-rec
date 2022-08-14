@@ -53,6 +53,68 @@ const User = (): JSX.Element => {
           <Button onClick={() => navigate('/recommend')} disabled={!isOAuth}>
             View Recommendations
           </Button>
+          <h2>Algorithm Explanation</h2>
+          <p>The algorithm weights charts based on the following:</p>
+          <ol>
+            <li>Tier-list</li>
+            <li>Grade</li>
+            <li>Lamp</li>
+          </ol>
+          <h3>Tier-list</h3>
+          <ul>
+            <li>
+              Greater than 25% cleared <b>x 1.25</b>
+            </li>
+            <li>
+              Greater than 50% cleared <b>x 1.50</b>
+            </li>
+            <li>
+              Greater than 75% cleared <b>x 1.75</b>
+            </li>
+            <li>
+              Greater than 95% cleared & chart is not cleared <b>x 2.00</b>
+            </li>
+          </ul>
+          <h3>Grade</h3>
+          <ul>
+            <li>
+              A or above <b>x 0.50</b>
+            </li>
+            <li>
+              B <b>x 1.50</b>
+            </li>
+            <li>
+              C <b>x 1.75</b>
+            </li>
+            <li>
+              D <b>x 2.00</b>
+            </li>
+          </ul>
+          <h3>Lamp</h3>
+          <ul>
+            <li>
+              NO PLAY <b>x 3.00</b>
+            </li>
+            <li>
+              ASSIST <b>x 2.00</b>
+            </li>
+            <li>
+              EASY <b>x 1.75</b>
+            </li>
+            <li>
+              FAILED <b>x 1.50</b>
+            </li>
+            <li>
+              CLEAR <b>x 0.50</b>
+            </li>
+          </ul>
+          <p>
+            This algorithm is{' '}
+            <b>
+              <i>NOT</i>
+            </b>{' '}
+            perfect at all. Please let me know if you think of a better one!
+          </p>
           <Button
             onClick={async () => {
               await Auth.signOut();

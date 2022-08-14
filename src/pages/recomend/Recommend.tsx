@@ -9,6 +9,7 @@ import {
 } from 'tachi-common';
 import { AuthContext } from '../../api/AuthContext';
 import { request } from '../../api/Request';
+import Button from '../../components/button-with-loader/Button';
 import Loading from '../../components/loading/Loading';
 import Page from '../../components/page/Page';
 import styles from './recomend.module.scss';
@@ -51,7 +52,10 @@ const Recommend = (): JSX.Element => {
   const navigate = useNavigate();
   const [isOAuth, setIsOAuth] = useState(undefined);
   const [scores, setScores] = useState<scoreObjects>(undefined);
-  const [userLevel, setUserLevel] = useState(0);
+  const [weightedCharts, setWeightedCharts] = useState<
+    ChartDocument<'iidx:SP'>[]
+  >([]);
+
   const { user, accessToken, idToken } = useContext(AuthContext);
 
   const allSongs = useMemo(
@@ -164,8 +168,10 @@ const Recommend = (): JSX.Element => {
     }
   }, [isOAuth]);
 
-  const weightedCharts = useMemo(() => {
-    const chartsWithWeight = allCharts.map((chart) => {
+  const addWeightToCharts = (
+    charts: ChartDocument<'iidx:SP'>[],
+  ): ChartDocument<'iidx:SP'>[] => {
+    const chartsWithWeight = charts.map((chart) => {
       return {
         ...chart,
         weight: Math.random(),
@@ -173,16 +179,21 @@ const Recommend = (): JSX.Element => {
     });
 
     // If user closer to clearing a tier add weight to charts in tier
+    // If very close to clearing tier, add weight to only charts not cleared
     const chartsWithAddedTierWeight = chartsWithWeight.map((chart) => {
       let weightToAdd = Math.random();
       const tierPercentage =
         tierNoClearPercentage[chart.tierlistInfo['kt-NC']?.text || 'No Tier'];
 
       if (tierPercentage > 0.95) {
-        weightToAdd *= 2;
+        if (pbsKeyedByChartId[chart.chartID]?.scoreData.lamp !== 'CLEAR') {
+          weightToAdd *= 2;
+        }
       } else if (tierPercentage > 0.75) {
-        weightToAdd *= 1.5;
+        weightToAdd *= 1.75;
       } else if (tierPercentage > 0.5) {
+        weightToAdd *= 1.5;
+      } else if (tierPercentage > 0.25) {
         weightToAdd *= 1.25;
       }
 
@@ -203,8 +214,12 @@ const Recommend = (): JSX.Element => {
         weightToAdd *= 1.75;
       } else if (chartPbGrade === 'B') {
         weightToAdd *= 1.5;
-      } else if (chartPbGrade === 'A') {
-        weightToAdd *= 1.25;
+      } else if (
+        chartPbGrade === 'A' ||
+        chartPbGrade === 'AA' ||
+        chartPbGrade === 'AAA'
+      ) {
+        weightToAdd *= 0.5;
       }
 
       return {
@@ -213,18 +228,21 @@ const Recommend = (): JSX.Element => {
       };
     });
 
+    // Recommend songs with lamps that could be improved on
     const chartsWithAddedLampWeight = chartsWithAddedRankWeight.map((chart) => {
       let weightToAdd = Math.random();
       const chartPbLamp = pbsKeyedByChartId[chart.chartID]?.scoreData.lamp;
 
-      if (chartPbLamp === 'ASSIST CLEAR') {
+      if (chartPbLamp === 'NO PLAY') {
+        weightToAdd *= 3;
+      } else if (chartPbLamp === 'ASSIST CLEAR') {
         weightToAdd *= 2;
-      } else if (chartPbLamp === 'FAILED') {
-        weightToAdd *= 1.75;
-      } else if (chartPbLamp === 'NO PLAY') {
-        weightToAdd *= 1.5;
       } else if (chartPbLamp === 'EASY CLEAR') {
-        weightToAdd *= 1.25;
+        weightToAdd *= 1.75;
+      } else if (chartPbLamp === 'FAILED') {
+        weightToAdd *= 1.5;
+      } else if (chartPbLamp === 'CLEAR') {
+        weightToAdd *= 0.5;
       }
 
       return {
@@ -234,6 +252,12 @@ const Recommend = (): JSX.Element => {
     });
 
     return chartsWithAddedLampWeight.sort((a, b) => b.weight - a.weight);
+  };
+
+  useEffect(() => {
+    if (tierNoClearPercentage) {
+      setWeightedCharts(addWeightToCharts(allCharts));
+    }
   }, [tierNoClearPercentage]);
 
   const getColourForLamp = (lamp: string): string => {
@@ -269,33 +293,44 @@ const Recommend = (): JSX.Element => {
               {weightedCharts.length <= 0 ? (
                 <Loading />
               ) : (
-                <ul>
-                  {weightedCharts.map((chart) => (
-                    <li
-                      key={chart.chartID}
-                      style={{
-                        backgroundColor: getColourForLamp(
-                          pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
-                        ),
-                      }}
-                    >
-                      <img
-                        src={`https://cdn.kamaitachi.xyz/game-icons/iidx/${
-                          songsKeyedById[chart.songID]?.data.displayVersion
-                        }`}
-                        alt={songsKeyedById[chart.songID]?.data.displayVersion}
-                      />
-                      {songsKeyedById[chart.songID]?.title || 'Unknown song'}
-                      &nbsp;
-                      {pbsKeyedByChartId[chart.chartID]?.scoreData
-                        ? `[${chart.level}] (${
-                            pbsKeyedByChartId[chart.chartID]?.scoreData.grade
-                          } 
+                <>
+                  <Button
+                    onClick={() =>
+                      setWeightedCharts(addWeightToCharts(allCharts))
+                    }
+                  >
+                    Shuffle
+                  </Button>
+                  <ul>
+                    {weightedCharts.map((chart) => (
+                      <li
+                        key={chart.chartID}
+                        style={{
+                          backgroundColor: getColourForLamp(
+                            pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
+                          ),
+                        }}
+                      >
+                        <img
+                          src={`https://cdn.kamaitachi.xyz/game-icons/iidx/${
+                            songsKeyedById[chart.songID]?.data.displayVersion
+                          }`}
+                          alt={
+                            songsKeyedById[chart.songID]?.data.displayVersion
+                          }
+                        />
+                        {songsKeyedById[chart.songID]?.title || 'Unknown song'}
+                        &nbsp;
+                        {pbsKeyedByChartId[chart.chartID]?.scoreData
+                          ? `[${chart.level}] (${
+                              pbsKeyedByChartId[chart.chartID]?.scoreData.grade
+                            } 
                       ${pbsKeyedByChartId[chart.chartID]?.scoreData.lamp})`
-                        : `[${chart.level}] (NO PLAY)`}
-                    </li>
-                  ))}
-                </ul>
+                          : `[${chart.level}] (NO PLAY)`}
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
             </div>
           )}
