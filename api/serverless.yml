@@ -105,6 +105,7 @@ resources:
 functions:
   app:
     handler: src/handler.handler
+    timeout: 30
     events:
       - http:
           method: ANY

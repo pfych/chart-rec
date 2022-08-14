@@ -50,7 +50,7 @@ const User = (): JSX.Element => {
               )}
             </span>
           )}
-          <Button onClick={() => navigate('/recommend')}>
+          <Button onClick={() => navigate('/recommend')} disabled={!isOAuth}>
             View Recommendations
           </Button>
           <Button
