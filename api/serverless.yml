@@ -40,6 +40,7 @@ provider:
       Ref: CognitoUserPoolClient
     COGNITO_USER_POOL_ID:
       Ref: CognitoUserPool
+    TACHI_SECRET: ${env:TACHI_SECRET}
 
 resources:
   Resources:
