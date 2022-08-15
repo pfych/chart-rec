@@ -96,20 +96,23 @@ const Recommend = (): JSX.Element => {
     [allCharts, pbsKeyedByChartId],
   );
 
-  const chartsWithPbsGroupedByTier: Record<TiersType, ChartDocument[]> =
-    useMemo(
-      () =>
-        groupBy(chartsWithPbClear, (chart) =>
-          get(chart, 'tierlistInfo.kt-NC.text', 'No Tier'),
-        ) as unknown as Record<TiersType, ChartDocument[]>,
-      [chartsWithPbClear],
-    );
-
   const chartsGroupedByTier: Record<TiersType, ChartDocument[]> = useMemo(
     () =>
       groupBy(allCharts, (chart) =>
         get(chart, 'tierlistInfo.kt-NC.text', 'No Tier'),
       ) as unknown as Record<TiersType, ChartDocument[]>,
+    [allCharts],
+  );
+
+  const chartsWithClearGroupedByTier = useMemo(
+    () =>
+      groupBy(
+        allCharts.filter(
+          (chart) =>
+            pbsKeyedByChartId[chart.chartID]?.scoreData.lamp === 'CLEAR',
+        ),
+        (chart) => get(chart, 'tierlistInfo.kt-NC.text', 'No Tier'),
+      ),
     [allCharts],
   );
 
@@ -119,13 +122,13 @@ const Recommend = (): JSX.Element => {
         (newObj, val) => ({
           ...newObj,
           [val]: (
-            (chartsWithPbsGroupedByTier[val]?.length || 0) /
+            (chartsWithClearGroupedByTier[val]?.length || 0) /
             (chartsGroupedByTier[val]?.length || 0)
           ).toFixed(2),
         }),
         {},
       ),
-    [chartsWithPbsGroupedByTier],
+    [chartsWithClearGroupedByTier],
   );
 
   useEffect(() => {
@@ -188,41 +191,22 @@ const Recommend = (): JSX.Element => {
       const tierPercentage =
         tierNoClearPercentage[chart.tierlistInfo['kt-NC']?.text || 'No Tier'];
 
-      if (tierPercentage > 0.95) {
-        if (pbsKeyedByChartId[chart.chartID]?.scoreData.lamp !== 'CLEAR') {
-          weightToAdd *= 2;
+      if (pbsKeyedByChartId[chart.chartID]?.scoreData.lamp !== 'CLEAR') {
+        if (tierPercentage > 0.875) {
+          weightToAdd *= 4;
+        } else if (tierPercentage > 0.75) {
+          weightToAdd *= 3.75;
+        } else if (tierPercentage > 0.625) {
+          weightToAdd *= 3.5;
+        } else if (tierPercentage > 0.5) {
+          weightToAdd *= 3.25;
+        } else if (tierPercentage > 0.375) {
+          weightToAdd *= 3;
+        } else if (tierPercentage > 0.25) {
+          weightToAdd *= 2.5;
+        } else if (tierPercentage > 12.5) {
+          weightToAdd *= 2.25;
         }
-      } else if (tierPercentage > 0.75) {
-        weightToAdd *= 1.75;
-      } else if (tierPercentage > 0.5) {
-        weightToAdd *= 1.5;
-      } else if (tierPercentage > 0.25) {
-        weightToAdd *= 1.25;
-      }
-
-      return {
-        ...chart,
-        weight: (chart.weight += weightToAdd),
-      };
-    });
-
-    // If user acc was bad on chart add weight to chart
-    const chartsWithAddedRankWeight = chartsWithAddedTierWeight.map((chart) => {
-      let weightToAdd = Math.random();
-      const chartPbGrade = pbsKeyedByChartId[chart.chartID]?.scoreData.grade;
-
-      if (chartPbGrade === 'D') {
-        weightToAdd *= 2;
-      } else if (chartPbGrade === 'C') {
-        weightToAdd *= 1.75;
-      } else if (chartPbGrade === 'B') {
-        weightToAdd *= 1.5;
-      } else if (
-        chartPbGrade === 'A' ||
-        chartPbGrade === 'AA' ||
-        chartPbGrade === 'AAA'
-      ) {
-        weightToAdd *= 0.5;
       }
 
       return {
@@ -232,18 +216,18 @@ const Recommend = (): JSX.Element => {
     });
 
     // Recommend songs with lamps that could be improved on
-    const chartsWithAddedLampWeight = chartsWithAddedRankWeight.map((chart) => {
+    const chartsWithAddedLampWeight = chartsWithAddedTierWeight.map((chart) => {
       let weightToAdd = Math.random();
       const chartPbLamp = pbsKeyedByChartId[chart.chartID]?.scoreData.lamp;
 
       if (chartPbLamp === 'NO PLAY') {
-        weightToAdd *= 3;
-      } else if (chartPbLamp === 'ASSIST CLEAR') {
         weightToAdd *= 2;
-      } else if (chartPbLamp === 'EASY CLEAR') {
+      } else if (chartPbLamp === 'ASSIST CLEAR') {
         weightToAdd *= 1.75;
-      } else if (chartPbLamp === 'FAILED') {
+      } else if (chartPbLamp === 'EASY CLEAR') {
         weightToAdd *= 1.5;
+      } else if (chartPbLamp === 'FAILED') {
+        weightToAdd *= 1.25;
       } else if (chartPbLamp === 'CLEAR') {
         weightToAdd *= 0.5;
       }
@@ -262,11 +246,11 @@ const Recommend = (): JSX.Element => {
         const timeDiffInSeconds = (currentTime - chartPbTime) * 1000;
 
         if (timeDiffInSeconds > MonthInSeconds * 2) {
-          weightToAdd *= 3;
+          weightToAdd *= 1.75;
         } else if (timeDiffInSeconds > MonthInSeconds) {
-          weightToAdd *= 2;
-        } else if (timeDiffInSeconds > MonthInSeconds / 2) {
           weightToAdd *= 1.5;
+        } else if (timeDiffInSeconds > MonthInSeconds / 2) {
+          weightToAdd *= 1.25;
         }
 
         return {
@@ -355,8 +339,16 @@ const Recommend = (): JSX.Element => {
                             <div className={styles.sub}>
                               <div className={styles.tier}>
                                 [
-                                {chart.tierlistInfo['kt-NC']?.text ||
-                                  `${chart.level}?`}
+                                {chart.tierlistInfo['kt-NC']?.text
+                                  ? `${
+                                      chart.tierlistInfo['kt-NC']?.text
+                                    } (${Math.floor(
+                                      tierNoClearPercentage[
+                                        chart.tierlistInfo['kt-NC']?.text ||
+                                          'No Tier'
+                                      ] * 100,
+                                    )}%)`
+                                  : `${chart.level}?`}
                                 ]
                               </div>
                               <div className={styles.grade}>

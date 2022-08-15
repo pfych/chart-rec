@@ -57,53 +57,46 @@ const User = (): JSX.Element => {
           <p>The algorithm weights charts based on the following:</p>
           <ol>
             <li>Tier-list</li>
-            <li>Grade</li>
             <li>Lamp</li>
             <li>Time since last played</li>
           </ol>
           <h3>Tier-list</h3>
           <ul>
             <li>
-              Greater than 25% cleared <b>x 1.25</b>
+              Greater than 12% cleared <b>x 1.25</b>
             </li>
             <li>
-              Greater than 50% cleared <b>x 1.50</b>
+              Greater than 25% cleared <b>x 1.50</b>
             </li>
             <li>
-              Greater than 75% cleared <b>x 1.75</b>
+              Greater than 37% cleared <b>x 2.00</b>
             </li>
             <li>
-              Greater than 95% cleared & chart is not cleared <b>x 2.00</b>
-            </li>
-          </ul>
-          <h3>Grade</h3>
-          <ul>
-            <li>
-              A or above <b>x 0.50</b>
+              Greater than 50% cleared <b>x 2.25</b>
             </li>
             <li>
-              B <b>x 1.50</b>
+              Greater than 62% cleared <b>x 2.50</b>
             </li>
             <li>
-              C <b>x 1.75</b>
+              Greater than 75% cleared <b>x 2.75</b>
             </li>
             <li>
-              D <b>x 2.00</b>
+              Greater than 87% cleared <b>x 3.00</b>
             </li>
           </ul>
           <h3>Lamp</h3>
           <ul>
             <li>
-              NO PLAY <b>x 3.00</b>
+              NO PLAY <b>x 2.00</b>
             </li>
             <li>
-              ASSIST <b>x 2.00</b>
+              ASSIST <b>x 1.75</b>
             </li>
             <li>
-              EASY <b>x 1.75</b>
+              EASY <b>x 1.50</b>
             </li>
             <li>
-              FAILED <b>x 1.50</b>
+              FAILED <b>x 1.25</b>
             </li>
             <li>
               CLEAR <b>x 0.50</b>
@@ -122,6 +115,10 @@ const User = (): JSX.Element => {
               15 Days ago <b>x 1.50</b>
             </li>
           </ul>
+          <p>
+            <b>TLDR;</b> This algorithm is more focused towards going for new
+            clear lamps.
+          </p>
           <p>
             This algorithm is{' '}
             <b>
