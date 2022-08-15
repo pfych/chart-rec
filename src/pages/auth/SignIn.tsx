@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { Auth, nav } from 'aws-amplify';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/button-with-loader/Button';
 import Page from '../../components/page/Page';
@@ -12,6 +12,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [warnings, setWarning] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState();
 
   useEffect(() => {
     (async () => {
@@ -20,14 +21,12 @@ const SignIn = () => {
         navigate('/user');
       }
     })();
-  }, []);
+  }, [user]);
 
   const handleSubmit = async () => {
     try {
       const newUser = await Auth.signIn(email, password);
-      if (newUser) {
-        navigate('/user');
-      }
+      setUser(newUser);
     } catch (e) {
       setWarning(e.toString().split(':')[1]);
     } finally {

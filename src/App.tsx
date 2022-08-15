@@ -16,28 +16,30 @@ const App = (): JSX.Element => {
   const [idToken, setIdToken] = useState<string>(null);
   const [user, setUser] = useState<ExtendedCognitoUser>(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
-        if (currentAuthenticatedUser) {
-          const userSession = await Auth.currentSession();
+  const recheckAuth = async () => {
+    try {
+      const currentAuthenticatedUser = await Auth.currentAuthenticatedUser();
+      if (currentAuthenticatedUser) {
+        const userSession = await Auth.currentSession();
 
-          const idJWT = userSession.getIdToken().getJwtToken();
-          const accessJWT = userSession.getAccessToken().getJwtToken();
+        const idJWT = userSession.getIdToken().getJwtToken();
+        const accessJWT = userSession.getAccessToken().getJwtToken();
 
-          setUser(currentAuthenticatedUser);
-          setAccessToken(accessJWT);
-          setIdToken(idJWT);
-        }
-      } catch (e) {
-        console.warn('Not signed in');
+        setUser(currentAuthenticatedUser);
+        setAccessToken(accessJWT);
+        setIdToken(idJWT);
       }
-    })();
+    } catch (e) {
+      console.warn('Not signed in');
+    }
+  };
+
+  useEffect(() => {
+    (async () => recheckAuth())();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ accessToken, idToken, user }}>
+    <AuthContext.Provider value={{ recheckAuth, accessToken, idToken, user }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

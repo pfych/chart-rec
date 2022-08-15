@@ -11,7 +11,11 @@ import styles from './user.module.scss';
 const User = (): JSX.Element => {
   const navigate = useNavigate();
   const [isOAuth, setIsOAuth] = useState(undefined);
-  const { user, accessToken, idToken } = useContext(AuthContext);
+  const { recheckAuth, user, accessToken, idToken } = useContext(AuthContext);
+
+  useEffect(() => {
+    recheckAuth();
+  }, []);
 
   useEffect(() => {
     if (accessToken && idToken) {
