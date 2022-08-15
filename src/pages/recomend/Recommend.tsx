@@ -48,6 +48,8 @@ export const Tiers = [
 ] as const;
 export type TiersType = typeof Tiers[number];
 
+const MonthInSeconds = 2629800;
+
 const Recommend = (): JSX.Element => {
   const navigate = useNavigate();
   const [isOAuth, setIsOAuth] = useState(undefined);
@@ -251,7 +253,35 @@ const Recommend = (): JSX.Element => {
       };
     });
 
-    return chartsWithAddedLampWeight.sort((a, b) => b.weight - a.weight);
+    const chartsWithAddedPlaytimeWeight = chartsWithAddedLampWeight.map(
+      (chart) => {
+        let weightToAdd = Math.random();
+        const chartPbTime = pbsKeyedByChartId[chart.chartID]?.timeAchieved;
+        const currentTime = new Date().valueOf();
+        const timeDiffInSeconds = (currentTime - chartPbTime) * 1000;
+        const tierPercentage =
+          tierNoClearPercentage[chart.tierlistInfo['kt-NC']?.text || 'No Tier'];
+
+        if (tierPercentage > 0.25) {
+          if (!chartPbTime) {
+            weightToAdd *= 3;
+          } else if (timeDiffInSeconds > MonthInSeconds * 2) {
+            weightToAdd *= 3;
+          } else if (timeDiffInSeconds > MonthInSeconds) {
+            weightToAdd *= 2;
+          } else if (timeDiffInSeconds > MonthInSeconds / 2) {
+            weightToAdd *= 1.5;
+          }
+        }
+
+        return {
+          ...chart,
+          weight: (chart.weight += weightToAdd),
+        };
+      },
+    );
+
+    return chartsWithAddedPlaytimeWeight.sort((a, b) => b.weight - a.weight);
   };
 
   useEffect(() => {
