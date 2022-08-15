@@ -263,15 +263,15 @@ const Recommend = (): JSX.Element => {
   const getColourForLamp = (lamp: string): string => {
     switch (lamp) {
       case 'CLEAR':
-        return '#4682b466';
+        return '#4682b4';
       case 'EASY CLEAR':
-        return '#32cd3266';
+        return '#32cd32';
       case 'ASSIST CLEAR':
-        return '#9932cc66';
+        return '#9932cc';
       case 'FAILED':
-        return '#AA555566';
+        return '#AA5555';
       default:
-        return '#fff';
+        return '#00000080';
     }
   };
 
@@ -305,28 +305,46 @@ const Recommend = (): JSX.Element => {
                     {weightedCharts.map((chart) => (
                       <li
                         key={chart.chartID}
-                        style={{
-                          backgroundColor: getColourForLamp(
-                            pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
-                          ),
-                        }}
+                        style={
+                          {
+                            '--lamp-color': getColourForLamp(
+                              pbsKeyedByChartId[chart.chartID]?.scoreData.lamp,
+                            ),
+                          } as React.CSSProperties
+                        }
                       >
-                        <img
-                          src={`https://cdn.kamaitachi.xyz/game-icons/iidx/${
-                            songsKeyedById[chart.songID]?.data.displayVersion
-                          }`}
-                          alt={
-                            songsKeyedById[chart.songID]?.data.displayVersion
-                          }
-                        />
-                        {songsKeyedById[chart.songID]?.title || 'Unknown song'}
-                        &nbsp;
-                        {pbsKeyedByChartId[chart.chartID]?.scoreData
-                          ? `[${chart.level}] (${
-                              pbsKeyedByChartId[chart.chartID]?.scoreData.grade
-                            } 
-                      ${pbsKeyedByChartId[chart.chartID]?.scoreData.lamp})`
-                          : `[${chart.level}] (NO PLAY)`}
+                        <div className={styles.chart}>
+                          <img
+                            src={`https://cdn.kamaitachi.xyz/game-icons/iidx/${
+                              songsKeyedById[chart.songID]?.data.displayVersion
+                            }`}
+                            alt={
+                              songsKeyedById[chart.songID]?.data.displayVersion
+                            }
+                          />
+                          <div className={styles.details}>
+                            <div className={styles.name}>
+                              {songsKeyedById[chart.songID]?.title ||
+                                'Unknown song'}
+                            </div>
+                            <div className={styles.sub}>
+                              <div className={styles.tier}>
+                                [
+                                {chart.tierlistInfo['kt-NC']?.text ||
+                                  `${chart.level}?`}
+                                ]
+                              </div>
+                              <div className={styles.grade}>
+                                {pbsKeyedByChartId[chart.chartID]?.scoreData
+                                  .grade || '?'}
+                              </div>
+                              <div className={styles.lamp}>
+                                {pbsKeyedByChartId[chart.chartID]?.scoreData
+                                  .lamp || 'NO PLAY'}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </li>
                     ))}
                   </ul>

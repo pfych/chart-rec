@@ -8,15 +8,41 @@
     list-style: none;
 
     li {
+      margin: unset;
       padding: 8px;
-      border-bottom: 1px solid #0a0a0a;
-      margin-bottom: unset !important;
+      white-space: nowrap;
+      overflow: auto;
+      border-bottom: 1px solid #00000010;
 
-      img {
-        width: 100px;
-        height: 50px;
-        margin-right: 8px;
-        object-fit: contain;
+
+      .chart {
+        display: flex;
+
+        img {
+          flex: 0 0 100px;
+          width: 100px;
+          height: 50px;
+          margin-right: 8px;
+          object-fit: contain;
+        }
+
+        .details {
+          .sub {
+            font-family: monospace;
+            font-size: 0.75em;
+            opacity: 0.8;
+            display: flex;
+
+            > div {
+              margin-right: 1ch;
+            }
+
+            .lamp {
+              font-weight: bold;
+              color: var(--lamp-color);
+            }
+          }
+        }
       }
     }
   }
