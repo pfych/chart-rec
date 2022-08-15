@@ -113,9 +113,6 @@ const User = (): JSX.Element => {
           <p>This only applies if you have more than 25% of the tier cleared</p>
           <ul>
             <li>
-              Never played <b>x 3.00</b>
-            </li>
-            <li>
               2 Months ago <b>x 3.00</b>
             </li>
             <li>

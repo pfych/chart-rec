@@ -7,6 +7,7 @@ import {
   PBScoreDocument,
   SongDocument,
 } from 'tachi-common';
+import moment from 'moment';
 import { AuthContext } from '../../api/AuthContext';
 import { request } from '../../api/Request';
 import Button from '../../components/button-with-loader/Button';
@@ -259,19 +260,13 @@ const Recommend = (): JSX.Element => {
         const chartPbTime = pbsKeyedByChartId[chart.chartID]?.timeAchieved;
         const currentTime = new Date().valueOf();
         const timeDiffInSeconds = (currentTime - chartPbTime) * 1000;
-        const tierPercentage =
-          tierNoClearPercentage[chart.tierlistInfo['kt-NC']?.text || 'No Tier'];
 
-        if (tierPercentage > 0.25) {
-          if (!chartPbTime) {
-            weightToAdd *= 3;
-          } else if (timeDiffInSeconds > MonthInSeconds * 2) {
-            weightToAdd *= 3;
-          } else if (timeDiffInSeconds > MonthInSeconds) {
-            weightToAdd *= 2;
-          } else if (timeDiffInSeconds > MonthInSeconds / 2) {
-            weightToAdd *= 1.5;
-          }
+        if (timeDiffInSeconds > MonthInSeconds * 2) {
+          weightToAdd *= 3;
+        } else if (timeDiffInSeconds > MonthInSeconds) {
+          weightToAdd *= 2;
+        } else if (timeDiffInSeconds > MonthInSeconds / 2) {
+          weightToAdd *= 1.5;
         }
 
         return {
@@ -372,6 +367,16 @@ const Recommend = (): JSX.Element => {
                                 {pbsKeyedByChartId[chart.chartID]?.scoreData
                                   .lamp || 'NO PLAY'}
                               </div>
+                              {pbsKeyedByChartId[chart.chartID] && (
+                                <div className={styles.time}>
+                                  {moment(
+                                    pbsKeyedByChartId[chart.chartID]
+                                      .timeAchieved,
+                                  )
+                                    .fromNow()
+                                    .replace(/^a/, '1')}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
