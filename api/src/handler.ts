@@ -5,6 +5,7 @@ import * as AWS from 'aws-sdk';
 import cors from 'cors';
 import { get, put } from './db/db';
 import { OAUTH_TABLE } from './db/tables';
+import { pullCSVFromKonami } from './konami/konami';
 import { oAuthStatus, tachiOAuth } from './oAuth/tachi-oauth';
 import { getScoresForUser } from './tachi/getScoresForUser';
 
@@ -31,3 +32,4 @@ module.exports.handler = serverless(app, {
 app.post('/tachi-oauth', tachiOAuth);
 app.post('/oauth-status', oAuthStatus);
 app.post('/get-scores', getScoresForUser);
+app.post('/csv-pull', pullCSVFromKonami);

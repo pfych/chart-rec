@@ -11,6 +11,11 @@ import styles from './user.module.scss';
 const User = (): JSX.Element => {
   const navigate = useNavigate();
   const [isOAuth, setIsOAuth] = useState(undefined);
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPulling, setIsPulling] = useState(false);
+
   const { recheckAuth, user, accessToken, idToken } = useContext(AuthContext);
 
   useEffect(() => {
@@ -31,6 +36,22 @@ const User = (): JSX.Element => {
       })();
     }
   }, [accessToken, idToken]);
+
+  const getCSV = async () => {
+    setIsPulling(true);
+    const data = await request({
+      method: 'POST',
+      endpoint: '/csv-pull',
+      accessToken,
+      idToken,
+      data: {
+        username,
+        password,
+      },
+    });
+    console.log(data);
+    setIsPulling(false);
+  };
 
   return (
     <Page title={'Account'}>
@@ -57,6 +78,27 @@ const User = (): JSX.Element => {
           <Button onClick={() => navigate('/recommend')} disabled={!isOAuth}>
             View Recommendations
           </Button>
+          <hr />
+          <h2>Konami Export</h2>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            isLoading={isPulling}
+            disabled={!password && !username}
+            type="button"
+            onClick={getCSV}
+          >
+            Pull CSV
+          </Button>
+          <hr />
           <h2>Algorithm Explanation</h2>
           <p>The algorithm weights charts based on the following:</p>
           <ol>
