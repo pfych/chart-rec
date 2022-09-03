@@ -2,7 +2,6 @@ import axios from 'axios';
 import { Request, Response } from 'express';
 import fs from 'fs';
 import FormData from 'form-data';
-import { Blob } from 'buffer';
 import UserAgent from 'user-agents';
 import { get } from '../db/db';
 import { OAUTH_TABLE } from '../db/tables';
@@ -11,6 +10,7 @@ const chromium = require('@sparticuz/chrome-aws-lambda');
 
 /** Yes I am aware of how dangerous this function is in practice. The UI will make this extremely prevalent! */
 export const pullCSVFromKonami = async (req: Request, res: Response) => {
+  let result: Record<string, string> = {};
   try {
     const user = await getUser(req);
 
@@ -53,13 +53,12 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
 
     console.log('Going to site...');
     await page.goto('https://p.eagate.573.jp/');
-    await page.evaluate(
-      'javascript:ea_common_template.login.show_loginform();',
-    );
-    await page.waitForNavigation();
+    await Promise.all([
+      page.waitForNavigation(),
+      page.evaluate('javascript:ea_common_template.login.show_loginform();'),
+    ]);
 
     console.log('Signing in...');
-    console.log(await page.content());
     await page.type('input[name=userId]', username);
     await page.type('input[name=password]', password);
     await page.click('.submit');
@@ -70,8 +69,14 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     );
 
     await page.waitForSelector('.dl-select');
-    await page.click('.submit_btn[value="SP"]');
-    await page.waitForSelector('#download');
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('.submit_btn[value="SP"]'),
+    ]);
+
+    if (!(await page.$('#download'))) {
+      throw new Error('Incorrect login or missing premium sub');
+    }
 
     console.log('Pulling scores...');
     const scoreElement = await page.waitForSelector('#score_data');
@@ -80,9 +85,13 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     );
     await browser.close();
 
+    if (!scoreData) {
+      throw new Error('No score data found?');
+    }
+
     await fs.writeFileSync(
       `/tmp/${username}_score.csv`,
-      scoreData.csv.replace(/\r/g, '\n'),
+      scoreData.replace(/\r/g, '\n'),
     );
 
     const file = fs.createReadStream(`/tmp/${username}_score.csv`, {
@@ -91,23 +100,38 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
 
     const form = new FormData();
     form.append('importType', 'file/eamusement-iidx-csv');
-    form.append('scoreData', file);
+    form.append('scoreData', file, {
+      contentType: 'text/csv',
+      knownLength: file.readableLength,
+    });
 
     const apiKey = `Bearer ${item.tachiCode}`;
-    await axios({
+    const response = await axios({
       url: 'https://kamaitachi.xyz/api/v1/import/file',
       method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
         Authorization: apiKey,
         'X-User-Intent': 'true',
+        ...form.getHeaders(),
       },
       data: form,
     });
 
-    res.end(JSON.stringify({ csv: `${scoreData}` }));
+    if (!response.data.success) {
+      throw new Error('Tachi not accepting import');
+    }
+
+    result = { csv: `${scoreData}` };
   } catch (e) {
     console.error(e);
-    res.end(JSON.stringify(e || { error: 'Unknown error occurred' }));
+    result = { error: `${e}` };
   }
+
+  res.end(
+    JSON.stringify(
+      !result.csv && !result.error
+        ? { error: 'Request timed out... Try again later?' }
+        : result,
+    ),
+  );
 };

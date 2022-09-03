@@ -37,6 +37,7 @@ const User = (): JSX.Element => {
   const [username, setUsername] = useState(storageUsername);
   const [password, setPassword] = useState(storagePassword);
   const [save, setSave] = useState(!!storageUsername || !!storagePassword);
+  const [message, setMessage] = useState('');
   const [isPulling, setIsPulling] = useState(false);
 
   const { recheckAuth, user, accessToken, idToken } = useContext(AuthContext);
@@ -80,6 +81,7 @@ const User = (): JSX.Element => {
 
   const getCSV = async () => {
     setIsPulling(true);
+    setMessage('');
     saveToLocalStorage();
     const data = await request({
       method: 'POST',
@@ -92,10 +94,17 @@ const User = (): JSX.Element => {
       },
     });
     console.log(data);
-    localStorage.setItem(
-      'lastSuccess',
-      JSON.stringify({ date: Math.floor(Date.now() / 1000) }),
-    );
+
+    if (data.error) {
+      setMessage(data.error);
+    } else {
+      localStorage.setItem(
+        'lastSuccess',
+        JSON.stringify({ date: Math.floor(Date.now() / 1000) }),
+      );
+      setMessage('Scores submitted to Tachi successfully!');
+    }
+
     setIsPulling(false);
   };
 
@@ -130,12 +139,7 @@ const User = (): JSX.Element => {
           </Button>
           <hr />
           <h2>Konami Export</h2>
-          <p>
-            Pull Konami CSV for import on Tachi.{' '}
-            <i>
-              <b>Currently logs to console!</b>
-            </i>
-          </p>
+          <p>Pull Konami CSV for import on Tachi.</p>
           <input
             placeholder="Username"
             type="text"
@@ -161,7 +165,7 @@ const User = (): JSX.Element => {
             in&nbsp;
             <b>plain text</b>.
           </label>
-
+          {message ? <p>{message}</p> : <></>}
           <Button
             isLoading={isPulling}
             disabled={(!password && !username) || !hasCoolDownPassed}
