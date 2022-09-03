@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Auth, nav } from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/button-with-loader/Button';
 import Page from '../../components/page/Page';

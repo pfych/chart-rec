@@ -43,6 +43,16 @@ const User = (): JSX.Element => {
   const { recheckAuth, user, accessToken, idToken } = useContext(AuthContext);
 
   useEffect(() => {
+    (async () => {
+      try {
+        await Auth.currentAuthenticatedUser();
+      } catch {
+        navigate('/sign-in');
+      }
+    })();
+  }, [user]);
+
+  useEffect(() => {
     recheckAuth();
   }, []);
 
@@ -138,8 +148,12 @@ const User = (): JSX.Element => {
             View Recommendations
           </Button>
           <hr />
-          <h2>Konami Export</h2>
-          <p>Pull Konami CSV for import on Tachi.</p>
+          <h2>Konami Import</h2>
+          <p>
+            Pull Konami CSV for import on Tachi. Please login bellow with your
+            Konami account bellow. These details are not saved on any non-konami
+            server.
+          </p>
           <input
             placeholder="Username"
             type="text"
@@ -161,11 +175,8 @@ const User = (): JSX.Element => {
                 setSave(e.target.checked);
               }}
             />
-            Save username and&nbsp;<b>password</b>&nbsp;to device localstorage
-            in&nbsp;
-            <b>plain text</b>.
+            Save username and password to device localstorage in plain text.
           </label>
-          {message ? <p>{message}</p> : <></>}
           <Button
             isLoading={isPulling}
             disabled={(!password && !username) || !hasCoolDownPassed}
@@ -176,6 +187,7 @@ const User = (): JSX.Element => {
               ? 'Pull CSV'
               : `Please wait ${Math.floor(coolDownTimeInSeconds / 60)} minutes`}
           </Button>
+          {message ? <p>{message}</p> : <></>}
           <hr />
           <h2>Algorithm Explanation</h2>
           <p>The algorithm weights charts based on the following:</p>

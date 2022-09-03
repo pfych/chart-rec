@@ -9,7 +9,7 @@ const Hero = (): JSX.Element => (
       <br />
       Pull scores from Kamaitachi and recommend charts to go for CLEAR
       <br />
-      <a href={'/sign-in'}>Sign In</a>
+      <a href={'/user'}>View Account</a>
     </p>
   </div>
 );

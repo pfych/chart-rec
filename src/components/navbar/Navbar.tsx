@@ -5,7 +5,7 @@ import styles from './navbar.module.scss';
 
 const links = [
   {
-    href: '/auth',
+    href: '/user',
     label: 'Account',
   },
 ];
