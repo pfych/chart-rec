@@ -1,3 +1,21 @@
 .user {
   padding: 16px;
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    margin-bottom: 1em;
+    padding: 6px 4px;
+    border: 1px solid #aaa
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+
+    input {
+      margin-right: 1ch;
+    }
+  }
 }

@@ -12,18 +12,20 @@ custom:
     bundle: true
     minify: true
     packager: yarn
+    external:
+      - "@sparticuz/chrome-aws-lambda"
     watch:
       pattern: ['src/**/*.ts']
       ignore: ['node_modules/**/*', '.build/**/*', '.serverless/**/*', '.esbuild/**/*']
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs16.x
   profile: ${param:profile} # force the profile parameter to be required
   region: ${opt:region}
   stage: ${opt:stage}
-  architecture: arm64
-  memorySize: 4096
+  architecture: x86_64
+  memorySize: 8192
   iamRoleStatements:
     - Effect: "Allow"
       Action:

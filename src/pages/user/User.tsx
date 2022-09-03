@@ -8,12 +8,25 @@ import Loading from '../../components/loading/Loading';
 import Page from '../../components/page/Page';
 import styles from './user.module.scss';
 
+const pullFromLocalStorage = () => {
+  const storage = JSON.parse(localStorage.getItem('konami'));
+
+  return {
+    username: storage?.username || '',
+    password: storage?.password || '',
+  };
+};
+
 const User = (): JSX.Element => {
   const navigate = useNavigate();
   const [isOAuth, setIsOAuth] = useState(undefined);
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const { username: storageUsername, password: storagePassword } =
+    pullFromLocalStorage();
+
+  const [username, setUsername] = useState(storageUsername);
+  const [password, setPassword] = useState(storagePassword);
+  const [save, setSave] = useState(!!storageUsername || !!storagePassword);
   const [isPulling, setIsPulling] = useState(false);
 
   const { recheckAuth, user, accessToken, idToken } = useContext(AuthContext);
@@ -21,6 +34,24 @@ const User = (): JSX.Element => {
   useEffect(() => {
     recheckAuth();
   }, []);
+
+  const saveToLocalStorage = () => {
+    localStorage.setItem(
+      'konami',
+      JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (save) {
+      saveToLocalStorage();
+    } else {
+      localStorage.removeItem('konami');
+    }
+  }, [save]);
 
   useEffect(() => {
     if (accessToken && idToken) {
@@ -39,6 +70,7 @@ const User = (): JSX.Element => {
 
   const getCSV = async () => {
     setIsPulling(true);
+    saveToLocalStorage();
     const data = await request({
       method: 'POST',
       endpoint: '/csv-pull',
@@ -80,16 +112,36 @@ const User = (): JSX.Element => {
           </Button>
           <hr />
           <h2>Konami Export</h2>
+          <p>
+            Pull Konami CSV for import on Tachi.&nbsp;
+            <i>
+              <b>Currently broken</b>
+            </i>
+          </p>
           <input
+            placeholder="Username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
+            placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <label className={styles.checkbox}>
+            <input
+              type="checkbox"
+              name="checkbox"
+              checked={save}
+              onChange={(e) => {
+                setSave(e.target.checked);
+              }}
+            />
+            Save username and password to device localstorage
+          </label>
+
           <Button
             isLoading={isPulling}
             disabled={!password && !username}
