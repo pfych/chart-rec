@@ -8,12 +8,22 @@ import Loading from '../../components/loading/Loading';
 import Page from '../../components/page/Page';
 import styles from './user.module.scss';
 
+const coolDownTimeInSeconds = 300;
+
 const pullFromLocalStorage = () => {
   const storage = JSON.parse(localStorage.getItem('konami'));
 
   return {
     username: storage?.username || '',
     password: storage?.password || '',
+  };
+};
+
+const getLastSuccess = () => {
+  const storage = JSON.parse(localStorage.getItem('lastSuccess'));
+
+  return {
+    date: storage?.date || 0,
   };
 };
 
@@ -82,8 +92,16 @@ const User = (): JSX.Element => {
       },
     });
     console.log(data);
+    localStorage.setItem(
+      'lastSuccess',
+      JSON.stringify({ date: Math.floor(Date.now() / 1000) }),
+    );
     setIsPulling(false);
   };
+
+  const hasCoolDownPassed =
+    getLastSuccess().date <
+    Math.floor(Date.now() / 1000) - coolDownTimeInSeconds;
 
   return (
     <Page title={'Account'}>
@@ -113,9 +131,9 @@ const User = (): JSX.Element => {
           <hr />
           <h2>Konami Export</h2>
           <p>
-            Pull Konami CSV for import on Tachi.&nbsp;
+            Pull Konami CSV for import on Tachi.{' '}
             <i>
-              <b>Currently broken</b>
+              <b>Currently logs to console!</b>
             </i>
           </p>
           <input
@@ -139,16 +157,20 @@ const User = (): JSX.Element => {
                 setSave(e.target.checked);
               }}
             />
-            Save username and password to device localstorage
+            Save username and&nbsp;<b>password</b>&nbsp;to device localstorage
+            in&nbsp;
+            <b>plain text</b>.
           </label>
 
           <Button
             isLoading={isPulling}
-            disabled={!password && !username}
+            disabled={(!password && !username) || !hasCoolDownPassed}
             type="button"
             onClick={getCSV}
           >
-            Pull CSV
+            {hasCoolDownPassed
+              ? 'Pull CSV'
+              : `Please wait ${Math.floor(coolDownTimeInSeconds / 60)} minutes`}
           </Button>
           <hr />
           <h2>Algorithm Explanation</h2>
@@ -217,7 +239,12 @@ const User = (): JSX.Element => {
             <b>TLDR;</b> This algorithm is more focused towards going for new
             clear lamps.
           </p>
-          <p>
+          <p
+            onClick={() => {
+              /** Bypass time limit on making CSV requests */
+              localStorage.setItem('lastSuccess', JSON.stringify({ date: 0 }));
+            }}
+          >
             This algorithm is{' '}
             <b>
               <i>NOT</i>

@@ -46,7 +46,6 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     await page.click('.submit');
 
     console.log('Navigating to csv...');
-
     await page.goto(
       'https://p.eagate.573.jp/game/2dx/29/djdata/score_download.html',
     );
