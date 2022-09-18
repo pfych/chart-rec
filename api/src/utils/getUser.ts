@@ -12,6 +12,6 @@ export const getUser = async (req: Request): Promise<any> => {
         .promise()
     ).$response.data;
   } catch (e) {
-    throw new Error('Cannot get user');
+    throw new Error('Cannot get user access tokens. Refresh maybe?');
   }
 };

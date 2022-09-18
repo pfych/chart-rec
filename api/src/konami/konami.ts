@@ -61,7 +61,8 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     console.log('Signing in...');
     await page.type('input[name=userId]', username);
     await page.type('input[name=password]', password);
-    await page.click('.submit');
+
+    await Promise.all([page.waitForNavigation(), page.click('.submit')]);
 
     console.log('Navigating to csv...');
     await page.goto(
@@ -75,7 +76,9 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     ]);
 
     if (!(await page.$('#download'))) {
-      throw new Error('Incorrect login or missing premium sub');
+      throw new Error(
+        'User either is missing premium sub or provided incorrect login details',
+      );
     }
 
     console.log('Pulling scores...');
@@ -86,7 +89,7 @@ export const pullCSVFromKonami = async (req: Request, res: Response) => {
     await browser.close();
 
     if (!scoreData) {
-      throw new Error('No score data found?');
+      throw new Error('No score data found? Do you have any scores?');
     }
 
     await fs.writeFileSync(
