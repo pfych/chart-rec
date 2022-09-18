@@ -150,17 +150,19 @@ const User = (): JSX.Element => {
           <hr />
           <h2>Konami Import</h2>
           <p>
-            Pull Konami CSV for import on Tachi. Please login bellow with your
-            Konami account bellow. These details are not saved on any non-konami
+            Pull Konami CSV for import on Tachi. Please login below with your
+            Konami account below. These details are not saved on any non-konami
             server.
           </p>
           <input
+            disabled
             placeholder="Username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
+            disabled
             placeholder="Password"
             type="password"
             value={password}
@@ -178,8 +180,9 @@ const User = (): JSX.Element => {
             Save username and password to device localstorage in plain text.
           </label>
           <Button
+            disabled
             isLoading={isPulling}
-            disabled={(!password && !username) || !hasCoolDownPassed}
+            // disabled={(!password && !username) || !hasCoolDownPassed}
             type="button"
             onClick={getCSV}
           >
