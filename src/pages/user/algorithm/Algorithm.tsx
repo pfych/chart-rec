@@ -13,25 +13,25 @@ const Algorithm = (): JSX.Element => {
       <h3>Tier-list</h3>
       <ul>
         <li>
-          Greater than 12% cleared <b>x 1.25</b>
+          Greater than 12% cleared <b>x 2.25</b>
         </li>
         <li>
-          Greater than 25% cleared <b>x 1.50</b>
+          Greater than 25% cleared <b>x 2.50</b>
         </li>
         <li>
-          Greater than 37% cleared <b>x 2.00</b>
+          Greater than 37% cleared <b>x 3.00</b>
         </li>
         <li>
-          Greater than 50% cleared <b>x 2.25</b>
+          Greater than 50% cleared <b>x 3.25</b>
         </li>
         <li>
-          Greater than 62% cleared <b>x 2.50</b>
+          Greater than 62% cleared <b>x 3.50</b>
         </li>
         <li>
-          Greater than 75% cleared <b>x 2.75</b>
+          Greater than 75% cleared <b>x 3.75</b>
         </li>
         <li>
-          Greater than 87% cleared <b>x 3.00</b>
+          Greater than 87% cleared <b>x 4.00</b>
         </li>
       </ul>
       <h3>Lamp</h3>
@@ -49,7 +49,7 @@ const Algorithm = (): JSX.Element => {
           FAILED <b>x 1.25</b>
         </li>
         <li>
-          CLEAR <b>x 0.50</b>
+          CLEAR <b>x 1.00</b>
         </li>
       </ul>
       <h3>Time since last play</h3>
@@ -63,6 +63,9 @@ const Algorithm = (): JSX.Element => {
         </li>
         <li>
           15 Days ago <b>x 1.50</b>
+        </li>
+        <li>
+          7 Days ago <b>x 1.25</b>
         </li>
       </ul>
       <p>

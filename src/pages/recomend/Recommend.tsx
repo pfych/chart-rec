@@ -192,7 +192,9 @@ const Recommend = (): JSX.Element => {
         tierNoClearPercentage[chart.tierlistInfo['kt-NC']?.text || 'No Tier'];
 
       if (pbsKeyedByChartId[chart.chartID]?.scoreData.lamp !== 'CLEAR') {
-        if (tierPercentage > 0.875) {
+        if (tierPercentage === 1) {
+          weightToAdd = 0;
+        } else if (tierPercentage > 0.875) {
           weightToAdd *= 4;
         } else if (tierPercentage > 0.75) {
           weightToAdd *= 3.75;
@@ -204,7 +206,7 @@ const Recommend = (): JSX.Element => {
           weightToAdd *= 3;
         } else if (tierPercentage > 0.25) {
           weightToAdd *= 2.5;
-        } else if (tierPercentage > 12.5) {
+        } else if (tierPercentage > 0.125) {
           weightToAdd *= 2.25;
         }
       }
@@ -229,7 +231,7 @@ const Recommend = (): JSX.Element => {
       } else if (chartPbLamp === 'FAILED') {
         weightToAdd *= 1.25;
       } else if (chartPbLamp === 'CLEAR') {
-        weightToAdd *= 0.5;
+        weightToAdd *= 1;
       }
 
       return {
@@ -246,10 +248,12 @@ const Recommend = (): JSX.Element => {
         const timeDiffInSeconds = (currentTime - chartPbTime) * 1000;
 
         if (timeDiffInSeconds > MonthInSeconds * 2) {
-          weightToAdd *= 1.75;
+          weightToAdd *= 3;
         } else if (timeDiffInSeconds > MonthInSeconds) {
-          weightToAdd *= 1.5;
+          weightToAdd *= 2;
         } else if (timeDiffInSeconds > MonthInSeconds / 2) {
+          weightToAdd *= 1.5;
+        } else if (timeDiffInSeconds > MonthInSeconds / 4) {
           weightToAdd *= 1.25;
         }
 
